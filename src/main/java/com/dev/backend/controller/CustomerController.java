@@ -35,7 +35,7 @@ import com.dev.backend.model.Status;
 import com.dev.backend.service.CustomerService;
 
 @Controller
-@RequestMapping("/customer")
+@RequestMapping(value = "/customer", produces = MediaType.APPLICATION_JSON_VALUE)
 public class CustomerController {
 
 	@Autowired

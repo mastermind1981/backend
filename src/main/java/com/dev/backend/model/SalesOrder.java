@@ -16,114 +16,106 @@
  * code is a task implementation for crossover https://crossover.com
  * @author: waleed samy <waleedsamy634@gmail.com>
  **/
-
 package com.dev.backend.model;
 
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 
+/**
+ * @author waleed samy
+ *
+ */
 @Entity
-@Table(name = "customer")
-@NamedQueries({ @NamedQuery(name = Customer.FindbyName, query = "from Customer s where s.name LIKE :name") })
+@Table(name = "sales_order")
 @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
-public class Customer implements Serializable {
-	public static final String FindbyName = "Customer.FindbyName";
+public class SalesOrder implements Serializable {
 
 	private static final long serialVersionUID = 1L;
+
 	private Long id;
-	private String code;
-	private String name;
-	private String address;
-	private String phone1;
-	private String phone2;
-	private Long creditLimit = 0L;
+	private Long orderNumber;
+	private Long totalPrice;
+	private Customer customer;
 	private Date creationDate = new Date();
 	private Date modificationDate = new Date();
-	
-	@OneToMany
-	@JoinColumn(name = "customer_sales_orders")
-	private List<SalesOrder> salesOrders;
 
-	public Customer(){
+	private List<OrderLine> orderLines;
+
+	public SalesOrder() {
 	}
-	
-	public Customer(String code, String name) {
-		this.code = code;
-		this.name = name;
+
+	public SalesOrder(Long orderNumber, Customer customer, Long totalPrice,
+			List<OrderLine> orderLines) {
+		this.orderNumber = orderNumber;
+		this.customer = customer;
+		this.totalPrice = totalPrice;
+		this.orderLines = orderLines;
 	}
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id", unique = true, nullable = false)
-	public Long getcustomerId() {
-		return this.id;
+	public Long getId() {
+		return id;
 	}
 
-	public void setCustomerId(Long customerId) {
-		this.id = customerId;
+	public void setId(Long id) {
+		this.id = id;
 	}
 
-	@Column(name = "code", unique = true, nullable = false)
-	public String getCode() {
-		return code;
+	@Column(name = "order_number", nullable = false)
+	public Long getOrderNumber() {
+		return orderNumber;
 	}
 
-	public void setCode(String code) {
-		this.code = code;
+	public void setOrderNumber(Long orderNumber) {
+		this.orderNumber = orderNumber;
 	}
 
-	@Column(name = "name")
-	public String getName() {
-		return this.name;
+	@Column(name = "total_price")
+	public Long getTotalPrice() {
+		return totalPrice;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setTotalPrice(Long totalPrice) {
+		this.totalPrice = totalPrice;
 	}
 
-	@Column
-	public String getAddress() {
-		return address;
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "customer_id", nullable = false, insertable = true, updatable = true)
+	public Customer getCustomer() {
+		return customer;
 	}
 
-	public void setAddress(String address) {
-		this.address = address;
+	public void setCustomer(Customer customer) {
+		this.customer = customer;
 	}
 
-	@Column
-	public String getPhone1() {
-		return phone1;
+	@OneToMany(mappedBy = "salesOrder", cascade= CascadeType.ALL)
+	public List<OrderLine> getOrderLines() {
+		return orderLines;
 	}
 
-	public void setPhone1(String phone1) {
-		this.phone1 = phone1;
+	public void setOrderLines(List<OrderLine> orderLines) {
+		this.orderLines = orderLines;
 	}
-
-	@Column
-	public String getPhone2() {
-		return phone2;
-	}
-
-	public void setPhone2(String phone2) {
-		this.phone2 = phone2;
-	}
-
+	
 	@Temporal(TemporalType.DATE)
 	@Column(name = "created_at", length = 7)
 	public Date getCreationDate() {
@@ -142,14 +134,5 @@ public class Customer implements Serializable {
 
 	public void setModificationDate(Date modificationDate) {
 		this.modificationDate = modificationDate;
-	}
-
-	@Column(name = "credit_limit")
-	public Long getCreditLimit() {
-		return creditLimit;
-	}
-
-	public void setCreditLimit(Long creditLimit) {
-		this.creditLimit = creditLimit;
 	}
 }

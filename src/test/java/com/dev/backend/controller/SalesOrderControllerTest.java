@@ -18,27 +18,17 @@
  **/
 package com.dev.backend.controller;
 
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.is;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
@@ -47,8 +37,11 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import com.dev.backend.model.Customer;
-import com.dev.backend.service.CustomerService;
-import com.dev.backend.service.dao.hibnerateDaoService;
+import com.dev.backend.model.OrderLine;
+import com.dev.backend.model.Product;
+import com.dev.backend.model.SalesOrder;
+import com.dev.backend.service.ProductService;
+import com.dev.backend.service.SalesOrderService;
 
 /**
  * @author waleed samy
@@ -57,19 +50,18 @@ import com.dev.backend.service.dao.hibnerateDaoService;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = { "file:src/main/webapp/WEB-INF/spring-config.xml" })
 @WebAppConfiguration
-public class CustomerControllerTest {
-
+public class SalesOrderControllerTest {
 	MockMvc mockMvc;
 
 	@Autowired
 	WebApplicationContext webApplicationContext;
 
-	@Mock
-	CustomerService customerServiceMock;
-
 	@InjectMocks
 	@Autowired
-	CustomerController customerController;
+	SalesOrderController salesOrderController;
+
+	@Mock
+	SalesOrderService salesOrderServiceMock;
 
 	@Before
 	public void setUp() {
@@ -79,25 +71,17 @@ public class CustomerControllerTest {
 	}
 
 	@Test
-	public void findAllCustomersShouldReturnEntries() throws Exception {
+	@Ignore
+	// TODO provide test
+	public void findAllSalesOrdersShouldReturnEntries() throws Exception {
+		Product first = new Product("123", 10.5, 200);
+		List<OrderLine> orderLines = new ArrayList<OrderLine>();
+		OrderLine order = new OrderLine(first, 10);
 
-		Customer first = new Customer("123", "john smith");
-		Customer second = new Customer("345", "john smith the second");
-
-		when(customerServiceMock.findAllCustomers()).thenReturn(
-				Arrays.asList(first, second));
-
-		mockMvc.perform(get("/customer/"))
-				.andExpect(status().isOk())
-				.andExpect(
-						content().contentType(MediaType.APPLICATION_JSON_VALUE))
-				.andExpect(jsonPath("$", hasSize(2)))
-				.andExpect(jsonPath("$[0].code", is("123")))
-				.andExpect(jsonPath("$[0].name", is("john smith")))
-				.andExpect(jsonPath("$[1].code", is("345")))
-				.andExpect(jsonPath("$[1].name", is("john smith the second")));
-
-		verify(customerServiceMock, times(1)).findAllCustomers();
-		verifyNoMoreInteractions(customerServiceMock);
+		orderLines.add(order);
+		SalesOrder salesOrder = new SalesOrder(123456L, new Customer("123",
+				"john smith"), 1000L, orderLines);
+		salesOrderServiceMock.createSalesOrder(salesOrder);
 	}
+
 }

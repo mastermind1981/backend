@@ -32,8 +32,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.util.Arrays;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
@@ -44,6 +48,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import com.dev.backend.model.Product;
+import com.dev.backend.service.CustomerService;
 import com.dev.backend.service.ProductService;
 
 /**
@@ -60,32 +65,39 @@ public class ProductControllerTest {
 	@Autowired
 	WebApplicationContext webApplicationContext;
 
+	@InjectMocks
 	@Autowired
+	ProductController productController;
+
+	@Mock
 	ProductService productServiceMock;
 
 	@Before
 	public void setUp() {
+		MockitoAnnotations.initMocks(this);
 		mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
 				.build();
 	}
 
 	@Test
-	public void findAllCustomersShouldReturnEntries() throws Exception {
+	public void findAllProductsShouldReturnEntries() throws Exception {
 		Product first = new Product("123", 10.5, 200);
 		Product second = new Product("345", 123.8, 10);
 
 		when(productServiceMock.findAllProducts()).thenReturn(
 				Arrays.asList(first, second));
 
-		mockMvc.perform(get("/customer/"))
+		mockMvc.perform(get("/product/"))
 				.andExpect(status().isOk())
 				.andExpect(
 						content().contentType(MediaType.APPLICATION_JSON_VALUE))
 				.andExpect(jsonPath("$", hasSize(2)))
 				.andExpect(jsonPath("$[0].code", is("123")))
-				.andExpect(jsonPath("$[0].name", is("john smith")))
+				.andExpect(jsonPath("$[0].price", is(10.5)))
+				.andExpect(jsonPath("$[0].quantity", is(200)))
 				.andExpect(jsonPath("$[1].code", is("345")))
-				.andExpect(jsonPath("$[1].name", is("john smith the second")));
+				.andExpect(jsonPath("$[1].price", is(123.8)))
+				.andExpect(jsonPath("$[1].quantity", is(10)));
 
 		verify(productServiceMock, times(1)).findAllProducts();
 		verifyNoMoreInteractions(productServiceMock);

@@ -24,47 +24,29 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.dev.backend.model.Product;
-import com.dev.backend.model.Status;
-import com.dev.backend.service.ProductService;
+import com.dev.backend.model.SalesOrder;
+import com.dev.backend.service.SalesOrderService;
 
 /**
  * @author waleed samy
  *
  */
 @Controller
-@RequestMapping(value = "/product", produces = MediaType.APPLICATION_JSON_VALUE)
-public class ProductController {
+@RequestMapping(value = "/order", produces = MediaType.APPLICATION_JSON_VALUE)
+public class SalesOrderController {
 
 	@Autowired
-	ProductService productService;
+	SalesOrderService salesOrderService;
 
-	static final Logger logger = Logger.getLogger(ProductController.class);
+	static final Logger logger = Logger.getLogger(SalesOrderController.class);
 
 	@RequestMapping(value = { "/", "/list" }, method = RequestMethod.GET)
-	public @ResponseBody List<Product> getAllProducts() {
-		return productService.findAllProducts();
+	public @ResponseBody List<SalesOrder> getAllSalesOrders() {
+		return salesOrderService.findAllSalesOrders();
 	}
 
-	@RequestMapping(value = "/", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-	public @ResponseBody Product addProduct(@RequestBody Product product) {
-		return productService.createProduct(product);
-	}
-
-	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
-	public @ResponseBody Product getProduct(@PathVariable("id") long id) {
-		return productService.findById(id);
-	}
-
-	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-	public @ResponseBody Status deleteProduct(@PathVariable("id") long id) {
-		productService.delete(id);
-		return new Status(1, "done");
-	}
 }
