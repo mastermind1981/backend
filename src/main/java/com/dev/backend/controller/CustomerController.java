@@ -58,7 +58,7 @@ public class CustomerController {
 		return customerService.findById(id);
 	}
 
-	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
+	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
 	public @ResponseBody Status deleteCustomer(@PathVariable("id") long id) {
 		customerService.delete(id);
 		return new Status(1, "done");

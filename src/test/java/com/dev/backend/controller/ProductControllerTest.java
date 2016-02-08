@@ -43,9 +43,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import com.dev.backend.model.Customer;
 import com.dev.backend.model.Product;
-import com.dev.backend.service.CustomerService;
 import com.dev.backend.service.ProductService;
 
 /**

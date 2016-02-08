@@ -3,8 +3,8 @@
 
 **run**
 ```Mysql
-# mysql
-CREATE SCHEMA crossover
+mysql -u root -p -e "CREATE SCHEMA crossover"
+mysql -u root -p < ./configuration/init.sql
 ```
 ```bash
 mvn clean install
