@@ -27,8 +27,6 @@ import com.dev.backend.model.Customer;
 public interface CustomerService {
 
 	public List<Customer> findAllCustomers();
-
-	public Customer findById(Long id) ;
 	
 	public Customer findByCode(String code) ;
 	

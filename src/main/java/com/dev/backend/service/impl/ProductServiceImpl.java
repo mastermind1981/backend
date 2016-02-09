@@ -31,6 +31,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.dev.backend.exceptions.DataNotFoundException;
+import com.dev.backend.model.Customer;
 import com.dev.backend.model.Product;
 import com.dev.backend.service.ProductService;
 import com.dev.backend.service.dao.hibnerateDaoService;
@@ -43,6 +44,7 @@ public class ProductServiceImpl implements ProductService {
 	@Autowired
 	private hibnerateDaoService baseDAO;
 
+	@Override
 	public List<Product> findAllProducts() {
 		try {
 			return baseDAO.findAll(Product.class);
@@ -52,37 +54,38 @@ public class ProductServiceImpl implements ProductService {
 		return new ArrayList<>();
 	}
 
+	@Override
 	public Product createProduct(Product product) {
+		Product existed = findByCode(product.getCode());
+		if (existed != null) {
+			return baseDAO.update(product);
+		}
 		return baseDAO.create(product);
 	}
 
+	@Override
 	public Product updateProduct(Product product) {
 		return baseDAO.update(product);
 	}
 
-	public Product findById(Long id) {
+	@Override
+	public Product findByCode(String code) {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("code", code);
 		try {
-			return baseDAO.findById(Product.class, id);
+			return baseDAO.findObjectWithNamedQuery(Product.FindbyCode, params);
 		} catch (DataNotFoundException e) {
-			LOG.log(Level.WARNING, "No Product Found For ID " + id);
+			LOG.log(Level.WARNING, "No Product Found With Code " + code);
 		}
 		return null;
 	}
 
-	public List<Product> findByName(String name) {
-		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("name", name);
-		try {
-			return baseDAO.findObjectWithNamedQuery(Product.FindbyCode, params);
-		} catch (DataNotFoundException e) {
-			LOG.log(Level.WARNING, "No Product Found With Name " + name);
-		}
-		return new ArrayList<>();
-	}
-
 	@Override
-	public void delete(Long id) {
-		baseDAO.delete(findById(id));
+	public void delete(String code) {
+		Product product = findByCode(code);
+		if (product != null) {
+			baseDAO.delete(findByCode(code));
+		}
 	}
 
 }

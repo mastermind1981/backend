@@ -46,12 +46,11 @@ public class Product implements Serializable, Cloneable {
 	public static final String FindbyCode = "Product.FindbyCode";
 
 	private static final long serialVersionUID = 1L;
-	private Long id;
+
 	private String code;
 	private String description;
 	private Double price;
 	private Integer quantity;
-
 	private Date creationDate = new Date();
 	private Date modificationDate = new Date();
 
@@ -69,16 +68,6 @@ public class Product implements Serializable, Cloneable {
 	}
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id", unique = true, nullable = false, precision = 22, scale = 0)
-	public Long getproductId() {
-		return this.id;
-	}
-
-	public void setproductId(Long productId) {
-		this.id = productId;
-	}
-
 	@Column(name = "code", length = 20)
 	public String getCode() {
 		return this.code;

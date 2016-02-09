@@ -27,14 +27,12 @@ import com.dev.backend.model.Product;
 public interface ProductService {
 
 	public List<Product> findAllProducts();
-
-	public Product findById(Long id) ;
 	
-	public void delete(Long id) ;
+	public void delete(String code) ;
 
 	public Product createProduct(Product product);
 
 	public Product updateProduct(Product product);
 
-	public List<Product> findByName(String name);
+	public Product findByCode(String code);
 }

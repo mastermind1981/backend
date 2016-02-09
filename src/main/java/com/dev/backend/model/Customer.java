@@ -49,7 +49,7 @@ public class Customer implements Serializable {
 	public static final String FindbyCode = "Customer.FindbyCode";
 
 	private static final long serialVersionUID = 1L;
-	private Long id;
+	
 	private String code;
 	private String name;
 	private String address;
@@ -73,16 +73,6 @@ public class Customer implements Serializable {
 	}
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id", unique = true, nullable = false)
-	public Long getcustomerId() {
-		return this.id;
-	}
-
-	public void setCustomerId(Long customerId) {
-		this.id = customerId;
-	}
-
 	@Column(name = "code", unique = true, nullable = false)
 	public String getCode() {
 		return code;

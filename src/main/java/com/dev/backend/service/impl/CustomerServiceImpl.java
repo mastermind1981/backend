@@ -54,17 +54,11 @@ public class CustomerServiceImpl implements CustomerService {
 	}
 
 	@Override
-	public Customer findById(Long id) {
-		try {
-			return baseDAO.findById(Customer.class, id);
-		} catch (DataNotFoundException e) {
-			LOG.log(Level.WARNING, "No Customer Found For ID " + id);
-		}
-		return null;
-	}
-
-	@Override
 	public Customer createCustomer(Customer customer) {
+		Customer existed = findByCode(customer.getCode());
+		if (existed != null) {
+			return baseDAO.update(customer);
+		}
 		return baseDAO.create(customer);
 	}
 

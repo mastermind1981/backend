@@ -97,7 +97,7 @@ public class hibnerateDaoService {
 	 */
 	public <T> T update(T t) {
 		Transaction tx = getSession().beginTransaction();
-		getSession().update(t);
+		getSession().merge(t);
 		tx.commit();
 		return t;
 	}

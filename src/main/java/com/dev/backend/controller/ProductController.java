@@ -57,14 +57,14 @@ public class ProductController {
 		return productService.createProduct(product);
 	}
 
-	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
-	public @ResponseBody Product getProduct(@PathVariable("id") long id) {
-		return productService.findById(id);
+	@RequestMapping(value = "/{code}", method = RequestMethod.GET)
+	public @ResponseBody Product getProduct(@PathVariable("code") String code) {
+		return productService.findByCode(code);
 	}
 
-	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-	public @ResponseBody Status deleteProduct(@PathVariable("id") long id) {
-		productService.delete(id);
+	@RequestMapping(value = "/{code}", method = RequestMethod.DELETE)
+	public @ResponseBody Status deleteProduct(@PathVariable("code") String code) {
+		productService.delete(code);
 		return new Status(1, "done");
 	}
 }
