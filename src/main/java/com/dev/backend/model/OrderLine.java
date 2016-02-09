@@ -24,6 +24,7 @@ import java.util.Date;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -50,7 +51,6 @@ public class OrderLine implements Serializable, Cloneable {
 	private Integer quantity;
 	private Product product;
 	private SalesOrder salesOrder;
-	
 
 	private Date creationDate = new Date();
 	private Date modificationDate = new Date();
@@ -83,7 +83,7 @@ public class OrderLine implements Serializable, Cloneable {
 		this.quantity = quantity;
 	}
 
-	@OneToOne(cascade = CascadeType.ALL)
+	@OneToOne
 	@JoinColumn(name = "product_id", nullable = false, insertable = true, updatable = true)
 	public Product getProduct() {
 		return product;
@@ -93,7 +93,8 @@ public class OrderLine implements Serializable, Cloneable {
 		this.product = product;
 	}
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@JoinColumn(name = "sales_order",referencedColumnName = "order_number")
 	public SalesOrder getSalesOrder() {
 		return salesOrder;
 	}
@@ -101,7 +102,7 @@ public class OrderLine implements Serializable, Cloneable {
 	public void setSalesOrder(SalesOrder salesOrder) {
 		this.salesOrder = salesOrder;
 	}
-	
+
 	@Temporal(TemporalType.DATE)
 	@Column(name = "created_at", length = 7)
 	public Date getCreationDate() {

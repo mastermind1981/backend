@@ -32,13 +32,11 @@ public interface SalesOrderService {
 	
 	public List<SalesOrder> findAllSalesOrders();
 	
-	public SalesOrder findById(Long id) ;
+	public SalesOrder findByOrderNumber(String orderNumber) ;
 
 	public SalesOrder createSalesOrder(SalesOrder salesOrder);
 	
 	public SalesOrder updateSalesOrder(SalesOrder salesOrder);
 
-	public SalesOrder addOrderLine(long salesOrderId, OrderLine order);
-
-	public void deleteSalesOrder(long id);
+	public void deleteSalesOrder(String orderNumber);
 }

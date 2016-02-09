@@ -18,18 +18,27 @@
  **/
 package com.dev.backend.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.dev.backend.model.Customer;
+import com.dev.backend.model.OrderLine;
+import com.dev.backend.model.Product;
 import com.dev.backend.model.SalesOrder;
+import com.dev.backend.model.Status;
 import com.dev.backend.service.SalesOrderService;
+import com.google.gson.Gson;
 
 /**
  * @author waleed samy
@@ -42,11 +51,31 @@ public class SalesOrderController {
 	@Autowired
 	SalesOrderService salesOrderService;
 
-	static final Logger logger = Logger.getLogger(SalesOrderController.class);
+	static final Logger LOG = Logger.getLogger(SalesOrderController.class);
+	Gson gson = new Gson();
+	
 
 	@RequestMapping(value = { "/", "/list" }, method = RequestMethod.GET)
 	public @ResponseBody List<SalesOrder> getAllSalesOrders() {
 		return salesOrderService.findAllSalesOrders();
 	}
 
+	@RequestMapping(value = "/", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+	public @ResponseBody SalesOrder addSalesOrder(@RequestBody SalesOrder order) {
+		LOG.info(gson.toJson(order));
+		return salesOrderService.createSalesOrder(order);
+	}
+
+	@RequestMapping(value = "/{orderNumber}", method = RequestMethod.GET)
+	public @ResponseBody SalesOrder getSalesOrder(
+			@PathVariable("orderNumber") String orderNumber) {
+		return salesOrderService.findByOrderNumber(orderNumber);
+	}
+
+	@RequestMapping(value = "/{orderNumber}", method = RequestMethod.DELETE)
+	public @ResponseBody Status deleteSalesOrder(
+			@PathVariable("orderNumber") String orderNumber) {
+		salesOrderService.deleteSalesOrder(orderNumber);
+		return new Status(1, "done");
+	}
 }

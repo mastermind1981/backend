@@ -25,6 +25,7 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -48,19 +49,17 @@ public class SalesOrder implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	private Long id;
-	private Long orderNumber;
-	private Long totalPrice;
+	private String orderNumber;
+	private Double totalPrice;
 	private Customer customer;
+	private List<OrderLine> orderLines;
 	private Date creationDate = new Date();
 	private Date modificationDate = new Date();
-
-	private List<OrderLine> orderLines;
 
 	public SalesOrder() {
 	}
 
-	public SalesOrder(Long orderNumber, Customer customer, Long totalPrice,
+	public SalesOrder(String orderNumber, Customer customer, Double totalPrice,
 			List<OrderLine> orderLines) {
 		this.orderNumber = orderNumber;
 		this.customer = customer;
@@ -69,35 +68,25 @@ public class SalesOrder implements Serializable {
 	}
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id", unique = true, nullable = false)
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	@Column(name = "order_number", nullable = false)
-	public Long getOrderNumber() {
+	@Column(name = "order_number", unique = true, nullable = false)
+	public String getOrderNumber() {
 		return orderNumber;
 	}
 
-	public void setOrderNumber(Long orderNumber) {
+	public void setOrderNumber(String orderNumber) {
 		this.orderNumber = orderNumber;
 	}
 
 	@Column(name = "total_price")
-	public Long getTotalPrice() {
+	public Double getTotalPrice() {
 		return totalPrice;
 	}
 
-	public void setTotalPrice(Long totalPrice) {
+	public void setTotalPrice(Double totalPrice) {
 		this.totalPrice = totalPrice;
 	}
 
-	@OneToOne(cascade = CascadeType.ALL)
+	@OneToOne
 	@JoinColumn(name = "customer_id", nullable = false, insertable = true, updatable = true)
 	public Customer getCustomer() {
 		return customer;
@@ -107,7 +96,7 @@ public class SalesOrder implements Serializable {
 		this.customer = customer;
 	}
 
-	@OneToMany(mappedBy = "salesOrder", cascade= CascadeType.ALL)
+	@OneToMany(mappedBy = "salesOrder", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	public List<OrderLine> getOrderLines() {
 		return orderLines;
 	}
@@ -115,7 +104,7 @@ public class SalesOrder implements Serializable {
 	public void setOrderLines(List<OrderLine> orderLines) {
 		this.orderLines = orderLines;
 	}
-	
+
 	@Temporal(TemporalType.DATE)
 	@Column(name = "created_at", length = 7)
 	public Date getCreationDate() {

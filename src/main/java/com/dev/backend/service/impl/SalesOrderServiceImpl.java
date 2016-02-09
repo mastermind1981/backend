@@ -28,7 +28,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.dev.backend.exceptions.DataNotFoundException;
-import com.dev.backend.model.OrderLine;
 import com.dev.backend.model.SalesOrder;
 import com.dev.backend.service.SalesOrderService;
 import com.dev.backend.service.dao.hibnerateDaoService;
@@ -46,6 +45,7 @@ public class SalesOrderServiceImpl implements SalesOrderService {
 	@Autowired
 	private hibnerateDaoService baseDAO;
 
+
 	@Override
 	public List<SalesOrder> findAllSalesOrders() {
 		try {
@@ -62,29 +62,26 @@ public class SalesOrderServiceImpl implements SalesOrderService {
 	}
 
 	@Override
-	public SalesOrder addOrderLine(long salesOrderId, OrderLine order) {
-		SalesOrder salesOrder = findById(salesOrderId);
-		salesOrder.getOrderLines().add(order);
-		return updateSalesOrder(salesOrder);
+	public void deleteSalesOrder(String orderNumber) {
+		baseDAO.delete(findByOrderNumber(orderNumber));
 	}
 
 	@Override
-	public void deleteSalesOrder(long id) {
-		baseDAO.delete(findById(id));
-	}
-
-	@Override
-	public SalesOrder findById(Long id) {
+	public SalesOrder findByOrderNumber(String orderNumber) {
 		try {
-			return baseDAO.findById(SalesOrder.class, id);
+			return baseDAO.findById(SalesOrder.class, orderNumber);
 		} catch (DataNotFoundException e) {
-			LOG.log(Level.WARNING, "No Product Found For ID " + id);
+			LOG.log(Level.WARNING, "No SalesOrder Found For ID " + orderNumber);
 		}
 		return null;
 	}
 
 	@Override
 	public SalesOrder createSalesOrder(SalesOrder salesOrder) {
+		SalesOrder existed = findByOrderNumber(salesOrder.getOrderNumber());
+		if (existed != null) {
+			return baseDAO.update(salesOrder);
+		}
 		return baseDAO.create(salesOrder);
 	}
 
