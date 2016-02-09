@@ -56,6 +56,7 @@ public class Customer implements Serializable {
 	private String phone1;
 	private String phone2;
 	private Long creditLimit = 0L;
+	private Long currentLimit = 0L;
 	private Date creationDate = new Date();
 	private Date modificationDate = new Date();
 
@@ -154,5 +155,14 @@ public class Customer implements Serializable {
 
 	public void setCreditLimit(Long creditLimit) {
 		this.creditLimit = creditLimit;
+	}
+
+	@Column(name = "currentLimit")
+	public Long getCurrentLimit() {
+		return currentLimit;
+	}
+
+	public void setCurrentLimit(Long currentLimit) {
+		this.currentLimit = currentLimit;
 	}
 }
