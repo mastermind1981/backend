@@ -30,7 +30,9 @@ public interface CustomerService {
 
 	public Customer findById(Long id) ;
 	
-	public void delete(Long id) ;
+	public Customer findByCode(String code) ;
+	
+	public void delete(String code) ;
 
 	public Customer createCustomer(Customer customer);
 

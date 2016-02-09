@@ -40,10 +40,13 @@ import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 
 @Entity
 @Table(name = "customer")
-@NamedQueries({ @NamedQuery(name = Customer.FindbyName, query = "from Customer s where s.name LIKE :name") })
+@NamedQueries({
+		@NamedQuery(name = Customer.FindbyName, query = "from Customer s where s.name LIKE :name"),
+		@NamedQuery(name = Customer.FindbyCode, query = "from Customer s where s.code = :code") })
 @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
 public class Customer implements Serializable {
 	public static final String FindbyName = "Customer.FindbyName";
+	public static final String FindbyCode = "Customer.FindbyCode";
 
 	private static final long serialVersionUID = 1L;
 	private Long id;
@@ -55,14 +58,14 @@ public class Customer implements Serializable {
 	private Long creditLimit = 0L;
 	private Date creationDate = new Date();
 	private Date modificationDate = new Date();
-	
+
 	@OneToMany
 	@JoinColumn(name = "customer_sales_orders")
 	private List<SalesOrder> salesOrders;
 
-	public Customer(){
+	public Customer() {
 	}
-	
+
 	public Customer(String code, String name) {
 		this.code = code;
 		this.name = name;

@@ -53,14 +53,14 @@ public class CustomerController {
 		return customerService.createCustomer(customer);
 	}
 
-	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
-	public @ResponseBody Customer getCustomer(@PathVariable("id") long id) {
-		return customerService.findById(id);
+	@RequestMapping(value = "/{code}", method = RequestMethod.GET)
+	public @ResponseBody Customer getCustomer(@PathVariable("code") String code) {
+		return customerService.findByCode(code);
 	}
 
-	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-	public @ResponseBody Status deleteCustomer(@PathVariable("id") long id) {
-		customerService.delete(id);
+	@RequestMapping(value = "/{code}", method = RequestMethod.DELETE)
+	public @ResponseBody Status deleteCustomer(@PathVariable("code") String code) {
+		customerService.delete(code);
 		return new Status(1, "done");
 	}
 }

@@ -87,8 +87,24 @@ public class CustomerServiceImpl implements CustomerService {
 	}
 
 	@Override
-	public void delete(Long id) {
-		baseDAO.delete(findById(id));
+	public void delete(String code) {
+		Customer customer = findByCode(code);
+		if (customer != null) {
+			baseDAO.delete(findByCode(code));
+		}
+	}
+
+	@Override
+	public Customer findByCode(String code) {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("code", code);
+		try {
+			return baseDAO
+					.findObjectWithNamedQuery(Customer.FindbyCode, params);
+		} catch (DataNotFoundException e) {
+			LOG.log(Level.WARNING, "No Customer Found With Code " + code);
+		}
+		return null;
 	}
 
 }
