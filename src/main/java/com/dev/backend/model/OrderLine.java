@@ -38,6 +38,7 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -58,11 +59,14 @@ public class OrderLine implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Basic(optional = false)
+	@XmlTransient
 	@Column(name = "id")
 	private Long id;
 	@Column(name = "created_at")
+	@XmlTransient
 	@Temporal(TemporalType.DATE)
 	private Date createdAt;
+	@XmlTransient
 	@Column(name = "updated_at")
 	@Temporal(TemporalType.DATE)
 	private Date updatedAt;

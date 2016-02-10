@@ -53,6 +53,12 @@ public class CustomerController {
 		return customerService.createCustomer(customer);
 	}
 
+	@RequestMapping(value = "/{code}", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	public @ResponseBody Customer updateCustomer(
+			@PathVariable("code") String code, @RequestBody Customer customer) {
+		return customerService.updateCustomer(customer);
+	}
+
 	@RequestMapping(value = "/{code}", method = RequestMethod.GET)
 	public @ResponseBody Customer getCustomer(@PathVariable("code") String code) {
 		return customerService.findByCode(code);

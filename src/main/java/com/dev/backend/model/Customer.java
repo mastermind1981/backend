@@ -72,14 +72,16 @@ public class Customer implements Serializable {
 	private String code;
 	@Column(name = "address")
 	private String address;
+	@XmlTransient
 	@Column(name = "created_at")
 	@Temporal(TemporalType.DATE)
 	private Date createdAt;
 	@Column(name = "credit_limit")
-	private BigInteger creditLimit;
+	private Double creditLimit;
 	@Column(name = "currentLimit")
-	private BigInteger currentLimit;
+	private Double currentLimit;
 	@Column(name = "updated_at")
+	@XmlTransient
 	@Temporal(TemporalType.DATE)
 	private Date updatedAt;
 	@Column(name = "name")
@@ -123,19 +125,19 @@ public class Customer implements Serializable {
 		this.createdAt = createdAt;
 	}
 
-	public BigInteger getCreditLimit() {
+	public Double getCreditLimit() {
 		return creditLimit;
 	}
 
-	public void setCreditLimit(BigInteger creditLimit) {
+	public void setCreditLimit(Double creditLimit) {
 		this.creditLimit = creditLimit;
 	}
 
-	public BigInteger getCurrentLimit() {
+	public Double getCurrentLimit() {
 		return currentLimit;
 	}
 
-	public void setCurrentLimit(BigInteger currentLimit) {
+	public void setCurrentLimit(Double currentLimit) {
 		this.currentLimit = currentLimit;
 	}
 

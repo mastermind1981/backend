@@ -65,10 +65,12 @@ public class SalesOrder implements Serializable {
 	@Column(name = "order_number")
 	private String orderNumber;
 	@Column(name = "created_at")
+	@XmlTransient
 	@Temporal(TemporalType.DATE)
 	private Date createdAt;
 	@Column(name = "updated_at")
 	@Temporal(TemporalType.DATE)
+	@XmlTransient
 	private Date updatedAt;
 	@Column(name = "total_price")
 	private Double totalPrice = 0.0;

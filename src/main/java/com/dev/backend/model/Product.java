@@ -68,9 +68,11 @@ public class Product implements Serializable {
 	private String code;
 	@Column(name = "created_at")
 	@Temporal(TemporalType.DATE)
+	@XmlTransient
 	private Date createdAt;
 	@Column(name = "description")
 	private String description;
+	@XmlTransient
 	@Column(name = "updated_at")
 	@Temporal(TemporalType.DATE)
 	private Date updatedAt;

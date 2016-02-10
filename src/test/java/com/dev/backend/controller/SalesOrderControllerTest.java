@@ -49,6 +49,7 @@ import org.springframework.web.context.WebApplicationContext;
 
 import com.dev.backend.model.Customer;
 import com.dev.backend.model.OrderLine;
+import com.dev.backend.model.Product;
 import com.dev.backend.model.SalesOrder;
 import com.dev.backend.service.SalesOrderService;
 import com.google.gson.Gson;
@@ -84,9 +85,10 @@ public class SalesOrderControllerTest {
 
 	@Test
 	public void findAllSalesOrdersShouldReturnEntries() throws Exception {
-		SalesOrder first = new SalesOrder("123", 10.5, 200);
+		
+		Product product = new Product("345", 123.8, 10);
 		List<OrderLine> orderLines = new ArrayList<OrderLine>();
-		OrderLine order = new OrderLine(first, 10);
+		OrderLine order = new OrderLine(product, 10);
 		orderLines.add(order);
 
 		SalesOrder salesOrder = new SalesOrder("123456", new Customer("123",
@@ -112,9 +114,10 @@ public class SalesOrderControllerTest {
 
 	@Test
 	public void findOneSalesOrderShouldReturnEntries() throws Exception {
-		SalesOrder first = new SalesOrder("UYTG", 10.5, 200);
+		
+		Product product = new Product("345", 123.8, 10);
 		List<OrderLine> orderLines = new ArrayList<OrderLine>();
-		OrderLine order = new OrderLine(first, 10);
+		OrderLine order = new OrderLine(product, 10);
 		orderLines.add(order);
 
 		SalesOrder salesOrder = new SalesOrder("120125", new Customer("SRDRR",
