@@ -23,61 +23,89 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
-import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+import org.codehaus.jackson.annotate.JsonIgnore;
 
+/**
+ *
+ * @author: waleed samy <waleedsamy634@gmail.com>
+ */
 @Entity
 @Table(name = "product")
-@NamedQueries({ @NamedQuery(name = Product.FindbyCode, query = "from Product s where s.code=:code") })
-@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
-public class Product implements Serializable, Cloneable {
-	public static final String FindbyCode = "Product.FindbyCode";
+@XmlRootElement
+@NamedQueries({
+		@NamedQuery(name = "Product.findAll", query = "SELECT p FROM Product p"),
+		@NamedQuery(name = Product.FindbyCode, query = "SELECT p FROM Product p WHERE p.code = :code"),
+		@NamedQuery(name = "Product.findByCreatedAt", query = "SELECT p FROM Product p WHERE p.createdAt = :createdAt"),
+		@NamedQuery(name = "Product.findByDescription", query = "SELECT p FROM Product p WHERE p.description = :description"),
+		@NamedQuery(name = "Product.findByUpdatedAt", query = "SELECT p FROM Product p WHERE p.updatedAt = :updatedAt"),
+		@NamedQuery(name = "Product.findByPrice", query = "SELECT p FROM Product p WHERE p.price = :price"),
+		@NamedQuery(name = "Product.findByQuantity", query = "SELECT p FROM Product p WHERE p.quantity = :quantity") })
+public class Product implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	private String code;
-	private String description;
-	private Double price;
-	private Integer quantity;
-	private Date creationDate = new Date();
-	private Date modificationDate = new Date();
+	public static final String FindbyCode = "Product.findByCode";
 
-	@OneToMany
-	@JoinColumn(name = "product_sales_orders")
-	private List<SalesOrder> salesOrders;
+	@Id
+	@Basic(optional = false)
+	@Column(name = "code")
+	private String code;
+	@Column(name = "created_at")
+	@Temporal(TemporalType.DATE)
+	private Date createdAt;
+	@Column(name = "description")
+	private String description;
+	@Column(name = "updated_at")
+	@Temporal(TemporalType.DATE)
+	private Date updatedAt;
+	@Column(name = "price")
+	private Double price = 0.0;
+	@Column(name = "quantity")
+	private Integer quantity;
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "productId")
+	private List<OrderLine> orderLineList;
 
 	public Product() {
 	}
 
-	public Product(String code, double price, int quantity) {
+	public Product(String code, Double price, Integer quantity) {
 		this.code = code;
 		this.price = price;
 		this.quantity = quantity;
 	}
 
-	@Id
-	@Column(name = "code", length = 20)
 	public String getCode() {
-		return this.code;
+		return code;
 	}
 
 	public void setCode(String code) {
 		this.code = code;
 	}
 
-	@Column(name = "description")
+	public Date getCreatedAt() {
+		return createdAt;
+	}
+
+	public void setCreatedAt(Date createdAt) {
+		this.createdAt = createdAt;
+	}
+
 	public String getDescription() {
 		return description;
 	}
@@ -86,7 +114,14 @@ public class Product implements Serializable, Cloneable {
 		this.description = description;
 	}
 
-	@Column(name = "price")
+	public Date getUpdatedAt() {
+		return updatedAt;
+	}
+
+	public void setUpdatedAt(Date updatedAt) {
+		this.updatedAt = updatedAt;
+	}
+
 	public Double getPrice() {
 		return price;
 	}
@@ -95,7 +130,6 @@ public class Product implements Serializable, Cloneable {
 		this.price = price;
 	}
 
-	@Column(name = "quantity")
 	public Integer getQuantity() {
 		return quantity;
 	}
@@ -104,24 +138,51 @@ public class Product implements Serializable, Cloneable {
 		this.quantity = quantity;
 	}
 
-	@Temporal(TemporalType.DATE)
-	@Column(name = "created_at", length = 7)
-	public Date getCreationDate() {
-		return this.creationDate;
+	@XmlTransient
+	@JsonIgnore
+	public List<OrderLine> getOrderLineList() {
+		return orderLineList;
 	}
 
-	public void setCreationDate(Date creationDate) {
-		this.creationDate = creationDate;
+	public void setOrderLineList(List<OrderLine> orderLineList) {
+		this.orderLineList = orderLineList;
 	}
 
-	@Temporal(TemporalType.DATE)
-	@Column(name = "updated_at", length = 7)
-	public Date getModificationDate() {
-		return this.modificationDate;
+	@PrePersist
+	private void preInsert() {
+		createdAt = new Date();
 	}
 
-	public void setModificationDate(Date modificationDate) {
-		this.modificationDate = modificationDate;
+	@PreUpdate
+	private void preUpdate() {
+		updatedAt = new Date();
+	}
+
+	@Override
+	public int hashCode() {
+		int hash = 0;
+		hash += (code != null ? code.hashCode() : 0);
+		return hash;
+	}
+
+	@Override
+	public boolean equals(Object object) {
+		// TODO: Warning - this method won't work in the case the id fields are
+		// not set
+		if (!(object instanceof Product)) {
+			return false;
+		}
+		Product other = (Product) object;
+		if ((this.code == null && other.code != null)
+				|| (this.code != null && !this.code.equals(other.code))) {
+			return false;
+		}
+		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "com.dev.backend.model.Product[ code=" + code + " ]";
 	}
 
 }

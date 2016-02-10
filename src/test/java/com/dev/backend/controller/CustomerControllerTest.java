@@ -1,21 +1,23 @@
 /**
  * Copyright 2016, owale.
  *
- * Licensed under GNU GENERAL PUBLIC LICENSE Version 3, 29 June 2007;
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed under GNU GENERAL PUBLIC LICENSE Version 3, 29 June 2007; you may
+ * not use this file except in compliance with the License. You may obtain a
+ * copy of the License at
  *
  * http://www.gnu.org/licenses/gpl-3.0.en.html
  *
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- * 
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
+ *
  * code is a task implementation for crossover https://crossover.com
+ *
  * @author: waleed samy <waleedsamy634@gmail.com>
- **/
+ *
+ */
 package com.dev.backend.controller;
 
 import static org.hamcrest.Matchers.hasSize;
@@ -32,6 +34,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.util.Arrays;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -48,7 +51,6 @@ import org.springframework.web.context.WebApplicationContext;
 
 import com.dev.backend.model.Customer;
 import com.dev.backend.service.CustomerService;
-import com.dev.backend.service.dao.hibnerateDaoService;
 
 /**
  * @author waleed samy
@@ -100,4 +102,25 @@ public class CustomerControllerTest {
 		verify(customerServiceMock, times(1)).findAllCustomers();
 		verifyNoMoreInteractions(customerServiceMock);
 	}
+
+	@Test
+	@Ignore
+	public void findOneCustomersShouldReturnEntries() throws Exception {
+	}
+
+	@Test
+	@Ignore
+	public void deleteCustomersShouldReturnEntries() throws Exception {
+	}
+
+	@Test
+	@Ignore
+	public void createCustomersShouldReturnEntries() throws Exception {
+	}
+
+	@Test
+	@Ignore
+	public void updateCustomersShouldReturnEntries() throws Exception {
+	}
+
 }

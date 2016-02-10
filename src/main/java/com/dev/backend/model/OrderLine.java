@@ -16,56 +16,77 @@
  * code is a task implementation for crossover https://crossover.com
  * @author: waleed samy <waleedsamy634@gmail.com>
  **/
+
 package com.dev.backend.model;
 
 import java.io.Serializable;
 import java.util.Date;
 
-import javax.persistence.CascadeType;
+import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-
-import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
- * @author waleed samy
  *
+ * @author: waleed samy <waleedsamy634@gmail.com>
  */
 @Entity
 @Table(name = "order_line")
-@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
-public class OrderLine implements Serializable, Cloneable {
+@XmlRootElement
+@NamedQueries({
+		@NamedQuery(name = "OrderLine.findAll", query = "SELECT o FROM OrderLine o"),
+		@NamedQuery(name = "OrderLine.findById", query = "SELECT o FROM OrderLine o WHERE o.id = :id"),
+		@NamedQuery(name = "OrderLine.findByCreatedAt", query = "SELECT o FROM OrderLine o WHERE o.createdAt = :createdAt"),
+		@NamedQuery(name = "OrderLine.findByUpdatedAt", query = "SELECT o FROM OrderLine o WHERE o.updatedAt = :updatedAt"),
+		@NamedQuery(name = "OrderLine.findByQuantity", query = "SELECT o FROM OrderLine o WHERE o.quantity = :quantity") })
+public class OrderLine implements Serializable {
 
 	private static final long serialVersionUID = 1L;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Basic(optional = false)
+	@Column(name = "id")
 	private Long id;
+	@Column(name = "created_at")
+	@Temporal(TemporalType.DATE)
+	private Date createdAt;
+	@Column(name = "updated_at")
+	@Temporal(TemporalType.DATE)
+	private Date updatedAt;
+	@Column(name = "quantity")
 	private Integer quantity;
-	private Product product;
+	@JoinColumn(name = "product_id", referencedColumnName = "code")
+	@ManyToOne(optional = false)
+	private Product productId;
+	@JoinColumn(name = "sales_order", referencedColumnName = "order_number")
+	@ManyToOne
 	private SalesOrder salesOrder;
-
-	private Date creationDate = new Date();
-	private Date modificationDate = new Date();
 
 	public OrderLine() {
 	}
 
+	public OrderLine(Long id) {
+		this.id = id;
+	}
+
 	public OrderLine(Product product, Integer quantity) {
-		this.product = product;
+		this.productId = product;
 		this.quantity = quantity;
 	}
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id", unique = true, nullable = false)
 	public Long getId() {
 		return id;
 	}
@@ -74,7 +95,22 @@ public class OrderLine implements Serializable, Cloneable {
 		this.id = id;
 	}
 
-	@Column(name = "quantity")
+	public Date getCreatedAt() {
+		return createdAt;
+	}
+
+	public void setCreatedAt(Date createdAt) {
+		this.createdAt = createdAt;
+	}
+
+	public Date getUpdatedAt() {
+		return updatedAt;
+	}
+
+	public void setUpdatedAt(Date updatedAt) {
+		this.updatedAt = updatedAt;
+	}
+
 	public Integer getQuantity() {
 		return quantity;
 	}
@@ -83,18 +119,14 @@ public class OrderLine implements Serializable, Cloneable {
 		this.quantity = quantity;
 	}
 
-	@OneToOne
-	@JoinColumn(name = "product_id", nullable = false, insertable = true, updatable = true)
-	public Product getProduct() {
-		return product;
+	public Product getProductId() {
+		return productId;
 	}
 
-	public void setProduct(Product product) {
-		this.product = product;
+	public void setProductId(Product productId) {
+		this.productId = productId;
 	}
 
-	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-	@JoinColumn(name = "sales_order",referencedColumnName = "order_number")
 	public SalesOrder getSalesOrder() {
 		return salesOrder;
 	}
@@ -103,24 +135,41 @@ public class OrderLine implements Serializable, Cloneable {
 		this.salesOrder = salesOrder;
 	}
 
-	@Temporal(TemporalType.DATE)
-	@Column(name = "created_at", length = 7)
-	public Date getCreationDate() {
-		return this.creationDate;
+	@PrePersist
+	private void preInsert() {
+		createdAt = new Date();
 	}
 
-	public void setCreationDate(Date creationDate) {
-		this.creationDate = creationDate;
+	@PreUpdate
+	private void preUpdate() {
+		updatedAt = new Date();
 	}
 
-	@Temporal(TemporalType.DATE)
-	@Column(name = "updated_at", length = 7)
-	public Date getModificationDate() {
-		return this.modificationDate;
+	@Override
+	public int hashCode() {
+		int hash = 0;
+		hash += (id != null ? id.hashCode() : 0);
+		return hash;
 	}
 
-	public void setModificationDate(Date modificationDate) {
-		this.modificationDate = modificationDate;
+	@Override
+	public boolean equals(Object object) {
+		// TODO: Warning - this method won't work in the case the id fields are
+		// not set
+		if (!(object instanceof OrderLine)) {
+			return false;
+		}
+		OrderLine other = (OrderLine) object;
+		if ((this.id == null && other.id != null)
+				|| (this.id != null && !this.id.equals(other.id))) {
+			return false;
+		}
+		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "com.dev.backend.model.OrderLine[ id=" + id + " ]";
 	}
 
 }

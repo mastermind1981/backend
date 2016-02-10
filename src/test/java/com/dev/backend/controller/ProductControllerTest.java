@@ -48,7 +48,6 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import com.dev.backend.model.Product;
-import com.dev.backend.service.CustomerService;
 import com.dev.backend.service.ProductService;
 
 /**
@@ -101,5 +100,25 @@ public class ProductControllerTest {
 
 		verify(productServiceMock, times(1)).findAllProducts();
 		verifyNoMoreInteractions(productServiceMock);
+	}
+	
+	@Test
+	@Ignore
+	public void findOneProductShouldReturnEntries() throws Exception {
+	}
+
+	@Test
+	@Ignore
+	public void deleteProductShouldReturnEntries() throws Exception {
+	}
+
+	@Test
+	@Ignore
+	public void createProductShouldReturnEntries() throws Exception {
+	}
+
+	@Test
+	@Ignore
+	public void updateProductShouldReturnEntries() throws Exception {
 	}
 }

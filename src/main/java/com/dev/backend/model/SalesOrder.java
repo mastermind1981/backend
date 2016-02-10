@@ -16,59 +16,83 @@
  * code is a task implementation for crossover https://crossover.com
  * @author: waleed samy <waleedsamy634@gmail.com>
  **/
+
 package com.dev.backend.model;
 
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
-import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+import org.codehaus.jackson.annotate.JsonIgnore;
 
 /**
- * @author waleed samy
  *
+ * @author: waleed samy <waleedsamy634@gmail.com>
  */
 @Entity
 @Table(name = "sales_order")
-@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
+@XmlRootElement
+@NamedQueries({
+		@NamedQuery(name = "SalesOrder.findAll", query = "SELECT s FROM SalesOrder s"),
+		@NamedQuery(name = "SalesOrder.findByOrderNumber", query = "SELECT s FROM SalesOrder s WHERE s.orderNumber = :orderNumber"),
+		@NamedQuery(name = "SalesOrder.findByCreatedAt", query = "SELECT s FROM SalesOrder s WHERE s.createdAt = :createdAt"),
+		@NamedQuery(name = "SalesOrder.findByUpdatedAt", query = "SELECT s FROM SalesOrder s WHERE s.updatedAt = :updatedAt"),
+		@NamedQuery(name = "SalesOrder.findByTotalPrice", query = "SELECT s FROM SalesOrder s WHERE s.totalPrice = :totalPrice") })
 public class SalesOrder implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
+	@Id
+	@Basic(optional = false)
+	@Column(name = "order_number")
 	private String orderNumber;
-	private Double totalPrice;
-	private Customer customer;
-	private List<OrderLine> orderLines;
-	private Date creationDate = new Date();
-	private Date modificationDate = new Date();
+	@Column(name = "created_at")
+	@Temporal(TemporalType.DATE)
+	private Date createdAt;
+	@Column(name = "updated_at")
+	@Temporal(TemporalType.DATE)
+	private Date updatedAt;
+	@Column(name = "total_price")
+	private Double totalPrice = 0.0;
+	@OneToMany(mappedBy = "salesOrder")
+	private List<OrderLine> orderLineList;
+	@JoinColumn(name = "customer_id", referencedColumnName = "code")
+	@ManyToOne(optional = false)
+	private Customer customerId;
 
 	public SalesOrder() {
 	}
 
-	public SalesOrder(String orderNumber, Customer customer, Double totalPrice,
-			List<OrderLine> orderLines) {
+	public SalesOrder(String orderNumber) {
 		this.orderNumber = orderNumber;
-		this.customer = customer;
-		this.totalPrice = totalPrice;
-		this.orderLines = orderLines;
 	}
 
-	@Id
-	@Column(name = "order_number", unique = true, nullable = false)
+	public SalesOrder(String orderNumber, Customer customerId,
+			Double totalPrice, List<OrderLine> orderLineList) {
+		this.orderNumber = orderNumber;
+		this.customerId = customerId;
+		this.totalPrice = totalPrice;
+		this.orderLineList = orderLineList;
+	}
+
 	public String getOrderNumber() {
 		return orderNumber;
 	}
@@ -77,7 +101,22 @@ public class SalesOrder implements Serializable {
 		this.orderNumber = orderNumber;
 	}
 
-	@Column(name = "total_price")
+	public Date getCreatedAt() {
+		return createdAt;
+	}
+
+	public void setCreatedAt(Date createdAt) {
+		this.createdAt = createdAt;
+	}
+
+	public Date getUpdatedAt() {
+		return updatedAt;
+	}
+
+	public void setUpdatedAt(Date updatedAt) {
+		this.updatedAt = updatedAt;
+	}
+
 	public Double getTotalPrice() {
 		return totalPrice;
 	}
@@ -86,42 +125,61 @@ public class SalesOrder implements Serializable {
 		this.totalPrice = totalPrice;
 	}
 
-	@OneToOne
-	@JoinColumn(name = "customer_id", nullable = false, insertable = true, updatable = true)
-	public Customer getCustomer() {
-		return customer;
+	@XmlTransient
+	@JsonIgnore
+	public List<OrderLine> getOrderLineList() {
+		return orderLineList;
 	}
 
-	public void setCustomer(Customer customer) {
-		this.customer = customer;
+	public void setOrderLineList(List<OrderLine> orderLineList) {
+		this.orderLineList = orderLineList;
 	}
 
-	@OneToMany(mappedBy = "salesOrder", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-	public List<OrderLine> getOrderLines() {
-		return orderLines;
+	public Customer getCustomerId() {
+		return customerId;
 	}
 
-	public void setOrderLines(List<OrderLine> orderLines) {
-		this.orderLines = orderLines;
+	public void setCustomerId(Customer customerId) {
+		this.customerId = customerId;
 	}
 
-	@Temporal(TemporalType.DATE)
-	@Column(name = "created_at", length = 7)
-	public Date getCreationDate() {
-		return this.creationDate;
+	@PrePersist
+	private void preInsert() {
+		createdAt = new Date();
 	}
 
-	public void setCreationDate(Date creationDate) {
-		this.creationDate = creationDate;
+	@PreUpdate
+	private void preUpdate() {
+		updatedAt = new Date();
 	}
 
-	@Temporal(TemporalType.DATE)
-	@Column(name = "updated_at", length = 7)
-	public Date getModificationDate() {
-		return this.modificationDate;
+	@Override
+	public int hashCode() {
+		int hash = 0;
+		hash += (orderNumber != null ? orderNumber.hashCode() : 0);
+		return hash;
 	}
 
-	public void setModificationDate(Date modificationDate) {
-		this.modificationDate = modificationDate;
+	@Override
+	public boolean equals(Object object) {
+		// TODO: Warning - this method won't work in the case the id fields are
+		// not set
+		if (!(object instanceof SalesOrder)) {
+			return false;
+		}
+		SalesOrder other = (SalesOrder) object;
+		if ((this.orderNumber == null && other.orderNumber != null)
+				|| (this.orderNumber != null && !this.orderNumber
+						.equals(other.orderNumber))) {
+			return false;
+		}
+		return true;
 	}
+
+	@Override
+	public String toString() {
+		return "com.dev.backend.model.SalesOrder[ orderNumber=" + orderNumber
+				+ " ]";
+	}
+
 }

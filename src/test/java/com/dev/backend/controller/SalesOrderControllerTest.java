@@ -26,7 +26,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import java.io.Console;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -50,9 +49,7 @@ import org.springframework.web.context.WebApplicationContext;
 
 import com.dev.backend.model.Customer;
 import com.dev.backend.model.OrderLine;
-import com.dev.backend.model.Product;
 import com.dev.backend.model.SalesOrder;
-import com.dev.backend.service.ProductService;
 import com.dev.backend.service.SalesOrderService;
 import com.google.gson.Gson;
 
@@ -87,7 +84,7 @@ public class SalesOrderControllerTest {
 
 	@Test
 	public void findAllSalesOrdersShouldReturnEntries() throws Exception {
-		Product first = new Product("123", 10.5, 200);
+		SalesOrder first = new SalesOrder("123", 10.5, 200);
 		List<OrderLine> orderLines = new ArrayList<OrderLine>();
 		OrderLine order = new OrderLine(first, 10);
 		orderLines.add(order);
@@ -108,14 +105,14 @@ public class SalesOrderControllerTest {
 				.andExpect(jsonPath("$[0].customer.code", is("123")))
 				.andExpect(jsonPath("$[0].customer.name", is("john smith")))
 				.andExpect(jsonPath("$.orderLines", hasSize(1)))
-				.andExpect(jsonPath("$.orderLines[0].product.code", is("123")))
-				.andExpect(jsonPath("$.orderLines[0].product.price", is(10.5)))
+				.andExpect(jsonPath("$.orderLines[0].SalesOrder.code", is("123")))
+				.andExpect(jsonPath("$.orderLines[0].SalesOrder.price", is(10.5)))
 				.andExpect(jsonPath("$.orderLines[0].quantity", is(10)));
 	}
 
 	@Test
-	public void getSalesOrdersDetailsShouldReturn() throws Exception {
-		Product first = new Product("UYTG", 10.5, 200);
+	public void findOneSalesOrderShouldReturnEntries() throws Exception {
+		SalesOrder first = new SalesOrder("UYTG", 10.5, 200);
 		List<OrderLine> orderLines = new ArrayList<OrderLine>();
 		OrderLine order = new OrderLine(first, 10);
 		orderLines.add(order);
@@ -134,8 +131,8 @@ public class SalesOrderControllerTest {
 				.andExpect(jsonPath("$.totalPrice", is(1000.0)))
 				.andExpect(jsonPath("$.customer.name", is("john smith")))
 				.andExpect(jsonPath("$.orderLines", hasSize(1)))
-				.andExpect(jsonPath("$.orderLines[0].product.code", is("UYTG")))
-				.andExpect(jsonPath("$.orderLines[0].product.price", is(10.5)))
+				.andExpect(jsonPath("$.orderLines[0].SalesOrder.code", is("UYTG")))
+				.andExpect(jsonPath("$.orderLines[0].SalesOrder.price", is(10.5)))
 				.andExpect(jsonPath("$.orderLines[0].quantity", is(10)));
 	}
 
@@ -160,9 +157,19 @@ public class SalesOrderControllerTest {
 				.andExpect(jsonPath("$.totalPrice", is(1000.0)))
 				.andExpect(jsonPath("$.customer.name", is("john smith")))
 				.andExpect(jsonPath("$.orderLines", hasSize(1)))
-				.andExpect(jsonPath("$.orderLines[0].product.code", is("UYTG")))
-				.andExpect(jsonPath("$.orderLines[0].product.price", is(10.5)))
+				.andExpect(jsonPath("$.orderLines[0].SalesOrder.code", is("UYTG")))
+				.andExpect(jsonPath("$.orderLines[0].SalesOrder.price", is(10.5)))
 				.andExpect(jsonPath("$.orderLines[0].quantity", is(10)));
+	}
+
+	@Test
+	@Ignore
+	public void deleteSalesOrderShouldReturnEntries() throws Exception {
+	}
+
+	@Test
+	@Ignore
+	public void updateSalesOrderShouldReturnEntries() throws Exception {
 	}
 
 }
