@@ -55,10 +55,6 @@ public class CustomerServiceImpl implements CustomerService {
 
 	@Override
 	public Customer createCustomer(Customer customer) {
-		Customer existed = findByCode(customer.getCode());
-		if (existed != null) {
-			return baseDAO.update(customer);
-		}
 		return baseDAO.create(customer);
 	}
 
