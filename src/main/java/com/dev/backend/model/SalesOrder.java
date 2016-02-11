@@ -74,7 +74,7 @@ public class SalesOrder implements Serializable {
 	private Date updatedAt;
 	@Column(name = "total_price")
 	private Double totalPrice = 0.0;
-	@OneToMany(mappedBy = "salesOrder")
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "salesOrder", orphanRemoval = true)
 	private List<OrderLine> orderLineList;
 	@JoinColumn(name = "customer_id", referencedColumnName = "code")
 	@ManyToOne(optional = false)

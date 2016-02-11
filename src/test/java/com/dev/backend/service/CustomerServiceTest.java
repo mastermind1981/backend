@@ -53,7 +53,7 @@ import com.github.springtestdbunit.annotation.DatabaseSetup;
 public class CustomerServiceTest {
 
 	private static Faker faker = new Faker();
-	private static final String rubbish = faker.letterify(" ersd");
+	private static final String rubbish = faker.letterify(" cs");
 
 	@Autowired
 	private hibnerateDaoService baseDAO;

@@ -1,0 +1,13 @@
+<dataset>
+	<order_line id="1" product_id="006282156-1" quantity="60"
+		sales_order="123451" created_at="2016-02-10" updated_at="2016-02-10" />
+	<order_line id="2" product_id="006282156-2" quantity="60"
+		sales_order="123452" created_at="2016-02-10" updated_at="2016-02-10" />
+	<order_line id="3" product_id="006282156-3" quantity="60"
+		sales_order="123453" created_at="2016-02-10" updated_at="2016-02-10" />
+	<order_line id="4" product_id="006282156-4" quantity="60"
+		sales_order="123454" created_at="2016-02-10" updated_at="2016-02-10" />
+	<order_line id="5" product_id="006282156-5" quantity="60"
+		sales_order="123455" created_at="2016-02-10" updated_at="2016-02-10" />
+
+</dataset>

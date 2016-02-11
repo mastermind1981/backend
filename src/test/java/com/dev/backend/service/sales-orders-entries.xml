@@ -1,0 +1,12 @@
+<dataset>
+	<sales_order order_number="123451" customer_id="006282146-1"
+		total_price="100" created_at="2016-02-10" updated_at="2016-02-10" />
+	<sales_order order_number="123452" customer_id="006282146-2"
+		total_price="200" created_at="2016-02-10" updated_at="2016-02-10" />
+	<sales_order order_number="123453" customer_id="006282146-3"
+		total_price="300" created_at="2016-02-10" updated_at="2016-02-10" />
+	<sales_order order_number="123454" customer_id="006282146-4"
+		total_price="400" created_at="2016-02-10" updated_at="2016-02-10" />
+	<sales_order order_number="123455" customer_id="006282146-5"
+		total_price="500" created_at="2016-02-10" updated_at="2016-02-10" />
+</dataset>

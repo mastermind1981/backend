@@ -1,0 +1,12 @@
+<dataset>
+	<product code="006282156-1" description="Mobile" created_at="2016-02-10"
+		price="100" quantity="10" updated_at="2016-02-10" />
+	<product code="006282156-2" description="PC" created_at="2016-02-10"
+		price="200" quantity="20" updated_at="2016-02-10" />
+	<product code="006282156-3" description="Phones" created_at="2016-02-10"
+		price="300" quantity="30" updated_at="2016-02-10" />
+	<product code="006282156-4" description="Books" created_at="2016-02-10"
+		price="400" quantity="40" updated_at="2016-02-10" />
+	<product code="006282156-5" description="Software" created_at="2016-02-10"
+		price="500" quantity="50" updated_at="2016-02-10" />
+</dataset>
